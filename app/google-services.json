@@ -1,0 +1,135 @@
+{
+  "project_info": {
+    "project_number": "700230349035",
+    "firebase_url": "https://gocorona-52deb.firebaseio.com",
+    "project_id": "gocorona-52deb",
+    "storage_bucket": "gocorona-52deb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700230349035:android:8a6b57d3507a0c80feceae",
+        "android_client_info": {
+          "package_name": "com.serbus.demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700230349035-q4qq62hf3pk97qmb5uik1q3f3jpvm3la.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcfzfnvdvt5S3xP3w-QlCSjK-YSKyapBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700230349035-q4qq62hf3pk97qmb5uik1q3f3jpvm3la.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "700230349035-16bss40umuofrsv2omlj8qvmdh943e13.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.cocoapods.demo.AMXSDK-Example"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700230349035:android:4f47045ded88f142feceae",
+        "android_client_info": {
+          "package_name": "com.thirtytwocare.gocoronago"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700230349035-6bdc0h2pgas8heg1eeblrcf4o3lj40jt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thirtytwocare.gocoronago",
+            "certificate_hash": "047bea956491a9109edda6736db16698b7ec32ba"
+          }
+        },
+        {
+          "client_id": "700230349035-q4qq62hf3pk97qmb5uik1q3f3jpvm3la.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcfzfnvdvt5S3xP3w-QlCSjK-YSKyapBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700230349035-q4qq62hf3pk97qmb5uik1q3f3jpvm3la.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "700230349035-16bss40umuofrsv2omlj8qvmdh943e13.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.cocoapods.demo.AMXSDK-Example"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700230349035:android:46837d06f2d6c154feceae",
+        "android_client_info": {
+          "package_name": "com.thirtytwocare.sampark"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700230349035-en9l812upvlour3g2ku2tdaa8ci33mue.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thirtytwocare.sampark",
+            "certificate_hash": "76b4afabba665b6a9398b8863146bd4d710d2c6b"
+          }
+        },
+        {
+          "client_id": "700230349035-q4qq62hf3pk97qmb5uik1q3f3jpvm3la.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcfzfnvdvt5S3xP3w-QlCSjK-YSKyapBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700230349035-q4qq62hf3pk97qmb5uik1q3f3jpvm3la.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "700230349035-16bss40umuofrsv2omlj8qvmdh943e13.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.cocoapods.demo.AMXSDK-Example"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

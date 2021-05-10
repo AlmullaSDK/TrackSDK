@@ -1,0 +1,3 @@
+include ':AMXSDK'
+include ':app'
+rootProject.name = "Demo"
