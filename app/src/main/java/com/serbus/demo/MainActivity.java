@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements TopicListener {
                 TrackSDK.handleEvent(MainActivity.this,event);
             }
         });
-        TrackSDK.initSDK(getApplicationContext(),"ABCD","appID","appKey",this);
+
         Map<String, Object> map = new HashMap<>();
 
         FirebaseMessaging.getInstance().getToken()
