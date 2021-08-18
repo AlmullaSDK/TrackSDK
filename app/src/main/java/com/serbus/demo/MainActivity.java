@@ -11,23 +11,45 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.serbus.amxsdk.AMX;
+import com.serbus.amxsdk.TrackSDK;
+import com.serbus.amxsdk.Event;
+import com.serbus.amxsdk.TopicListener;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.HashMap;
+import java.util.Map;
+
+public class MainActivity extends AppCompatActivity implements TopicListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private EditText eventText;
+    private Button eventButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new AMX(getApplicationContext()).setKey("abcd");
+        eventText = (EditText) findViewById(R.id.eventText);
+        eventButton = (Button) findViewById(R.id.eventButton);
+        eventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String,Object> payload = new HashMap<>();
+                payload.put("TEXT",eventText.getText().toString());
+                Event event = new Event("EVENT_"+eventText.getText().toString(),payload);
+                TrackSDK.handleEvent(MainActivity.this,event);
+            }
+        });
+        TrackSDK.initSDK(getApplicationContext(),"ABCD","appID","appKey",this);
+        Map<String, Object> map = new HashMap<>();
 
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
@@ -114,5 +136,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onPause();
+    }
+
+    @Override
+    public void onTopicReceived(String topic) {
+        Log.e("TOPIC", topic);
     }
 }
