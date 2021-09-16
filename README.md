@@ -2,6 +2,24 @@
 
 ## Installation ##
 
+Add it in your root build.gradle at the end of repositories:
+
+```
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+ ```
+ 
+ Add the dependency
+ 
+ ```
+ dependencies {
+	        implementation 'com.github.AlmullaSDK:TrackSDK:1.0.1'
+	}
+ ```
 
 ## Initialization ##
 
@@ -9,7 +27,7 @@ Implement Topic listener to you application class
 
 `public class AppController extends Application implements TopicListener`
 
-In 'onCreate' method of your application add the following code 
+In 'onCreate' method of your application class add the following code 
 
 `new CherryAgent().initSDK(getApplicationContext(),"CONSUMER_KEY",this).setDomain("domain");`
 
