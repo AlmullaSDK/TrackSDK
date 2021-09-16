@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.serbus.amxsdk.TrackSDK;
+import com.serbus.amxsdk.CherryAgent;
 import com.serbus.amxsdk.Event;
 import com.serbus.amxsdk.TopicListener;
 
@@ -30,22 +30,28 @@ public class MainActivity extends AppCompatActivity implements TopicListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private BroadcastReceiver mRegistrationBroadcastReceiver;
-    private EditText eventText;
     private Button eventButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        eventText = (EditText) findViewById(R.id.eventText);
         eventButton = (Button) findViewById(R.id.eventButton);
         eventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Map<String,Object> payload = new HashMap<>();
-                payload.put("TEXT",eventText.getText().toString());
-                Event event = new Event("EVENT_"+eventText.getText().toString(),payload);
-                TrackSDK.handleEvent(MainActivity.this,event);
+                payload.put("test_string","abcd");
+                payload.put("test_integer", 1234);
+                Map<String,Object> data = new HashMap<>();
+                Map<String,Object> subdata = new HashMap<>();
+                subdata.put("sub_data_one","new");
+                subdata.put("sub_data_two",123);
+                subdata.put("sub_data_three",true);
+                data.put("data_one", false);
+                data.put("data_two",subdata);
+                Event event = new Event("EVENT_TEST",payload,data);
+                CherryAgent.handleEvent(MainActivity.this,event);
             }
         });
 

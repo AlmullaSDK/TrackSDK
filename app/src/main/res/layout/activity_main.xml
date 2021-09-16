@@ -14,17 +14,12 @@
         android:layout_marginLeft="20dp"
         android:gravity="center"
         android:orientation="vertical">
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/eventText"
-            android:hint="EVENT Name"
-            />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Submit"
+            android:text="Submit Event"
             android:background="@color/colorPrimary"
             android:textColor="@android:color/white"
             android:id="@+id/eventButton"/>

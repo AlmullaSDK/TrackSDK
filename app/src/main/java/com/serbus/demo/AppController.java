@@ -9,13 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.serbus.amxsdk.TopicListener;
-import com.serbus.amxsdk.TrackSDK;
+import com.serbus.amxsdk.CherryAgent;
 
 public class AppController extends Application implements TopicListener,Application.ActivityLifecycleCallbacks {
     @Override
     public void onCreate() {
         super.onCreate();
-        TrackSDK.initSDK(getApplicationContext(),"ABCD","appID","appKey",this);
+        Log.e("DEMO" , "SDK PRE INIT");
+        new CherryAgent().initSDK(getApplicationContext(),"1fxb5zl0ul62u",this).setDomain("https://apib-kwt.almullaexchange.com/xms");
     }
 
     @Override
@@ -36,7 +37,7 @@ public class AppController extends Application implements TopicListener,Applicat
 
     @Override
     public void onActivityResumed(@NonNull Activity activity) {
-        TrackSDK.initSDK(getApplicationContext(),"ABCD","appID","appKey",this);
+        new CherryAgent().initSDK(getApplicationContext(),"CONSUMER_KEY",this).setDomain("https://apib-kwt.almullaexchange.com/xms");
     }
 
     @Override

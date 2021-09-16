@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TrackSDK {
+public class CherryAgent {
 
     static private  String apiKey;
     static private String deviceId;
@@ -27,15 +27,16 @@ public class TrackSDK {
     static private SharedPreferences mPrefs;
     static private SharedPreferences.Editor editor;
     static private String s_identity;
-    static private String s_appID;
-    static private String s_appKey;
+    static private String s_consumerKey;
     static private String s_origin;
-    static public TopicListener topicListener;
+    static private TopicListener topicListener;
+    private Context context;
 
-    static public void initSDK(Context context, String key, String appId, String appKey,TopicListener topicListener){
-        TrackSDK.topicListener = topicListener;
+     public CherryAgent initSDK(Context context, String consumerKey,TopicListener topicListener){
+        CherryAgent.topicListener = topicListener;
         mPrefs = context.getSharedPreferences("SDKPrefs", Context.MODE_PRIVATE);
         PackageInfo pInfo = null;
+        this.context = context;
         try {
             pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             s_version = pInfo.versionName;
@@ -45,18 +46,21 @@ public class TrackSDK {
         s_osVersion = Build.VERSION.RELEASE;
         s_identity = mPrefs.getString("identity", "");
         s_origin = context.getPackageName();
-        s_appID = appId;
-        s_appKey = appKey;
+        s_consumerKey = consumerKey;
 
         setStringSharePrefs(context,"version",s_version);
         setStringSharePrefs(context,"osVersion",s_osVersion);
         setStringSharePrefs(context,"identity",s_identity);
         setStringSharePrefs(context,"origin",s_origin);
-        setStringSharePrefs(context,"appId",s_appID);
-        setStringSharePrefs(context,"appKey",s_appKey);
+        setStringSharePrefs(context,"consumerKey",s_consumerKey);
 
-        makeInitCall(context);
 
+        makeHeartbeatCall(context);
+        return this;
+    }
+
+    public void setDomain(String domain){
+        setStringSharePrefs(context,"domain",domain);
     }
 
     static public void setIdentity(Context context,String identity){
@@ -75,43 +79,54 @@ public class TrackSDK {
     }
 
 
-    static private void makeInitCall(final Context context){
+    static private void makeHeartbeatCall(final Context context){
         HashMap<String, Object> req_data = new HashMap<String, Object>();;
-        req_data.put("appId",getStringSharePrefs(context,"appId"));
-        req_data.put("appKey",getStringSharePrefs(context,"appKey"));
-        req_data.put("appVersion",getStringSharePrefs(context,"version"));
-        req_data.put("clientFp", Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ANDROID_ID));
+//        req_data.put("appId",getStringSharePrefs(context,"appId"));
+//        req_data.put("appKey",getStringSharePrefs(context,"appKey"));
+//        req_data.put("appVersion",getStringSharePrefs(context,"version"));
 
-
-        if(!getStringSharePrefs(context,"identity").equals("")){
-            req_data.put("identity",getStringSharePrefs(context,"identity"));
-        }
-
-        if(!getStringSharePrefs(context,"clientId").equals("")){
-            req_data.put("clientId",getStringSharePrefs(context,"clientId"));
-        }
-
-        req_data.put("osVersion",getStringSharePrefs(context,"osVersion"));
 
         HashMap<String , Object> uuidMap = new HashMap<>();
         uuidMap.put("version", getIntSharePrefs(context, "uuid_version"));
         uuidMap.put("value", getStringSharePrefs(context, "uuid_value"));
         uuidMap.put("updatedStamp", getIntSharePrefs(context, "uuid_updatedStamp"));
+
+
+
+        HashMap<String , Object> clientProperties = new HashMap<>();
+        clientProperties.put("appVersion", getStringSharePrefs(context,"version"));
+        clientProperties.put("osVersion", getStringSharePrefs(context,"osVersion"));
+        clientProperties.put("appType", getStringSharePrefs(context,"ANDROID"));
+        clientProperties.put("devicePlatform", getStringSharePrefs(context,"ANDROID"));
+        clientProperties.put("channel", getStringSharePrefs(context,"ANDROID"));
+        clientProperties.put("deviceType", getStringSharePrefs(context,"MOBILE"));
+
+        req_data.put("clientFp", Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID));
+        if(!getStringSharePrefs(context,"identity").equals("")){
+            req_data.put("identity",getStringSharePrefs(context,"identity"));
+        }
+        if(!getStringSharePrefs(context,"clientId").equals("")){
+            req_data.put("clientId",getStringSharePrefs(context,"clientId"));
+        }
+        if(!getStringSharePrefs(context,"signature").equals("")){
+            req_data.put("signature",getStringSharePrefs(context,"signature"));
+        }
         req_data.put("uuId",uuidMap);
-
-
-        HashMap<String,String> userAgent = new HashMap<>();
-        userAgent.put("appType" , "ANDROID");
-        userAgent.put("channel" , "ANDROID");
-        userAgent.put("devicePlatform" , "ANDROID");
-        userAgent.put("deviceType" , "MOBILE");
-
-        req_data.put("userAgent",userAgent);
+        req_data.put("clientProperties",clientProperties);
+        String domain = "https://apib-kwt.almullaexchange.com/xms";
+        if(!getStringSharePrefs(context,"domain").equals("")){
+            domain = getStringSharePrefs(context,"domain");
+        }
 
         Log.e("REQUEST", new JSONObject(req_data).toString());
 
-        new HTTPRequest().makeCall(context,"https://apib-kwt.almullaexchange.com/xms/api/v1/data/device-init", new JSONObject(req_data), new HTTPCallback() {
+
+
+        Map<String,String> headerMap = new HashMap<String,String>();
+        headerMap.put("consumerKey",getStringSharePrefs(context,"consumerKey"));
+
+        new HTTPRequest().makeCall(context,domain+"/api/v1/client/heartbeat", new JSONObject(req_data),headerMap, new HTTPCallback() {
             @Override
             public void processFinish(String response) {
                 Log.e("Response",response);
@@ -126,12 +141,14 @@ public class TrackSDK {
                     String uuidValue = uuIdObject.optString("value");
                     int uuidVersion = uuIdObject.optInt("version");
                     int uuidUpdatedStamp = uuIdObject.optInt("updatedStamp");
+                    String signature = resultObject.getString("signature");
                     setStringSharePrefs(context,"uuid_value",uuidValue);
                     setIntSharePrefs(context,"uuid_version",uuidVersion);
                     setIntSharePrefs(context,"uuid_updatedStamp",uuidUpdatedStamp);
+                    setStringSharePrefs(context,"signature",signature);
 
                     if(topicListener != null){
-                        topicListener.onTopicReceived("topic");
+                        topicListener.onTopicReceived("topic_"+s_consumerKey);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -146,35 +163,26 @@ public class TrackSDK {
     }
 
 
+
+
     static private void setEventCall(Context context,Event event){
         HashMap<String, Object> req_data = new HashMap<String, Object>();
-        List<HashMap<String ,String>> links = new ArrayList<>();
-        req_data.put("data",event.payload);
+        HashMap<String, Object> eventData = new HashMap<String, Object>();
+        eventData.put("data",event.data);
+        eventData.put("attr",event.attr);
         req_data.put("eventName",event.eventName);
+        req_data.put("eventData",eventData);
 
-        String clientFp = Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-
-        if(clientFp != null){
-            HashMap<String, String> link = new HashMap<>();
-            link.put("linkName","clientFp");
-            link.put("linkType","DEVICE");
-            link.put("linkValue",clientFp);
-            links.add(link);
+        Map<String,String> headerMap = new HashMap<String,String>();
+        if(!getStringSharePrefs(context,"clientId").equals("")){
+            headerMap.put("clientId",getStringSharePrefs(context,"clientId"));
         }
-
-
-        if(!getStringSharePrefs(context,"identity").equals("")){
-            HashMap<String, String> link = new HashMap<>();
-            link.put("linkName","identity");
-            link.put("linkType","CUSTOMER");
-            link.put("linkValue",getStringSharePrefs(context,"identity"));
-            links.add(link);
+        headerMap.put("consumerKey",getStringSharePrefs(context,"consumerKey"));
+        String domain = "https://apib-kwt.almullaexchange.com/xms";
+        if(!getStringSharePrefs(context,"domain").equals("")){
+            domain = getStringSharePrefs(context,"domain");
         }
-
-        req_data.put("links",links);
-
-        new HTTPRequest().makeCall(context,"https://apib-kwt.almullaexchange.com/xms/api/v1/event/push", new JSONObject(req_data), new HTTPCallback() {
+        new HTTPRequest().makeCall(context,domain+"/api/v1/client/track/event", new JSONObject(req_data),headerMap, new HTTPCallback() {
             @Override
             public void processFinish(String response) {
                 Log.e("Response",response);

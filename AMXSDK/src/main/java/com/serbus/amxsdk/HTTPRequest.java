@@ -37,7 +37,7 @@ public class HTTPRequest {
     public HTTPRequest() {
     }
 
-    public void makeCall(Context context, String url, JSONObject jsonBody, final HTTPCallback httpCallback){
+    public void makeCall(Context context, String url, JSONObject jsonBody, final Map<String,String> headers, final HTTPCallback httpCallback){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         String URL = url;
         final String requestBody = jsonBody.toString();
@@ -70,6 +70,14 @@ public class HTTPRequest {
                     VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
                     return null;
                 }
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                params.putAll(headers);
+                return params;
             }
 
             @Override
